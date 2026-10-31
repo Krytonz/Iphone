@@ -24,7 +24,7 @@ function App() {
   return (
     <>
       {showBoot && <BootAnimation onComplete={handleBootComplete} />}
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/produto/:slug" element={<ProductDetail />} />

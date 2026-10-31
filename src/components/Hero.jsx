@@ -4,10 +4,12 @@ import { FaWhatsapp, FaApple } from 'react-icons/fa'
 import { TiltedGridHero } from './ui/tilted-grid-hero'
 
 // Referências fornecidas pelo cliente: iPhone 18 Pro Max em três acabamentos.
+const assetUrl = (fileName) => `${import.meta.env.BASE_URL}${fileName}`
+
 const IPHONE_IMAGES = [
-  { src: '/iphone-white.jpg', alt: 'iPhone 18 Pro Max branco, frente e traseira' },
-  { src: '/iphone-blue.jpg', alt: 'iPhone 18 Pro Max azul, frente e traseira' },
-  { src: '/iphone-black.jpg', alt: 'iPhone 18 Pro Max preto, frente e traseira' },
+  { src: assetUrl('iphone-white.jpg'), alt: 'iPhone 18 Pro Max branco, frente e traseira' },
+  { src: assetUrl('iphone-blue.jpg'), alt: 'iPhone 18 Pro Max azul, frente e traseira' },
+  { src: assetUrl('iphone-black.jpg'), alt: 'iPhone 18 Pro Max preto, frente e traseira' },
 ]
 
 const isLightBackground = (r, g, b) =>

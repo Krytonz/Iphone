@@ -4,4 +4,6 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // O GitHub Pages publica este projeto dentro de /Iphone/.
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/Iphone/' : '/',
 })
