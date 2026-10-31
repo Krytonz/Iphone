@@ -1,35 +1,48 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useCallback, useState } from 'react'
 import Home from './pages/Home'
 import ProductDetail from './pages/ProductDetail'
 import BootAnimation from './components/BootAnimation'
 import './index.css'
 
 function App() {
-  const [showBoot, setShowBoot] = useState(true)
-
-  useEffect(() => {
-    // Verificar se já viu a animação nesta sessão
-    const hasSeenBoot = sessionStorage.getItem('hasSeenBoot')
-    if (hasSeenBoot) {
-      setShowBoot(false)
+  const [showBoot, setShowBoot] = useState(() => {
+    try {
+      return !sessionStorage.getItem('hasSeenBoot')
+    } catch {
+      return true
     }
+  })
+  const [bootFinished, setBootFinished] = useState(!showBoot)
+
+  const handleBootComplete = useCallback(() => {
+    setBootFinished(true)
   }, [])
 
-  const handleBootComplete = () => {
+  const handleBootExitComplete = useCallback(() => {
+    try {
+      sessionStorage.setItem('hasSeenBoot', 'true')
+    } catch {
+      // A animação continua funcionando mesmo quando o storage está bloqueado.
+    }
     setShowBoot(false)
-    sessionStorage.setItem('hasSeenBoot', 'true')
-  }
+  }, [])
 
   return (
     <>
-      {showBoot && <BootAnimation onComplete={handleBootComplete} />}
       <Router basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/produto/:slug" element={<ProductDetail />} />
         </Routes>
       </Router>
+      {showBoot && (
+        <BootAnimation
+          isExiting={bootFinished}
+          onComplete={handleBootComplete}
+          onExitComplete={handleBootExitComplete}
+        />
+      )}
     </>
   )
 }

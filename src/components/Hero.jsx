@@ -73,7 +73,7 @@ const removeLightBackground = (src) =>
   })
 
 const Hero = () => {
-  const [processedImages, setProcessedImages] = useState([])
+  const [processedImages, setProcessedImages] = useState(IPHONE_IMAGES)
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches,
   )
@@ -106,7 +106,6 @@ const Hero = () => {
     <section id="home" className="relative min-h-[820px] overflow-hidden bg-black pt-20 sm:min-h-[760px] lg:min-h-screen">
       <TiltedGridHero
         images={processedImages}
-        key={processedImages.length}
         speed={5}
         tileHeight={28}
         aspectRatio={9 / 16}

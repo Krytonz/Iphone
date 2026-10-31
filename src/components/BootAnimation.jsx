@@ -1,8 +1,8 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { FaApple } from 'react-icons/fa'
 
-const BootAnimation = ({ onComplete }) => {
+const BootAnimation = ({ isExiting, onComplete, onExitComplete }) => {
   const [showProgress, setShowProgress] = useState(false)
 
   useEffect(() => {
@@ -11,10 +11,10 @@ const BootAnimation = ({ onComplete }) => {
       setShowProgress(true)
     }, 1000)
 
-    // Completar animação
+    // Iniciar a saída somente depois que a barra terminar.
     const timer2 = setTimeout(() => {
       onComplete()
-    }, 3500)
+    }, 3150)
 
     return () => {
       clearTimeout(timer1)
@@ -23,13 +23,15 @@ const BootAnimation = ({ onComplete }) => {
   }, [onComplete])
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-        className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
-      >
+    <motion.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: isExiting ? 0 : 1 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      onAnimationComplete={(definition) => {
+        if (definition.opacity === 0) onExitComplete()
+      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
+    >
         {/* iPhone Frame */}
         <div className="relative">
           {/* iPhone Screen */}
@@ -86,7 +88,6 @@ const BootAnimation = ({ onComplete }) => {
           <p className="text-gray-400 text-sm">Zona Sul • Porto Velho</p>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
   )
 }
 
