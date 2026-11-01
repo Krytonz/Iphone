@@ -12,69 +12,7 @@ const IPHONE_IMAGES = [
   { src: assetUrl('iphone-black.jpg'), alt: 'iPhone 18 Pro Max preto, frente e traseira' },
 ]
 
-const isLightBackground = (r, g, b) =>
-  Math.min(r, g, b) > 222 && Math.max(r, g, b) - Math.min(r, g, b) < 28
-
-const removeLightBackground = (src) =>
-  new Promise((resolve) => {
-    const image = new Image()
-    image.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = image.naturalWidth
-      canvas.height = image.naturalHeight
-      const context = canvas.getContext('2d')
-
-      if (!context) {
-        resolve(src)
-        return
-      }
-
-      context.drawImage(image, 0, 0)
-      const pixels = context.getImageData(0, 0, canvas.width, canvas.height)
-      const { data, width, height } = pixels
-      const visited = new Uint8Array(width * height)
-      const queue = []
-
-      const enqueue = (x, y) => {
-        const index = y * width + x
-        if (visited[index]) return
-        const pixel = index * 4
-        if (isLightBackground(data[pixel], data[pixel + 1], data[pixel + 2])) {
-          visited[index] = 1
-          queue.push(index)
-        }
-      }
-
-      for (let x = 0; x < width; x += 1) {
-        enqueue(x, 0)
-        enqueue(x, height - 1)
-      }
-      for (let y = 1; y < height - 1; y += 1) {
-        enqueue(0, y)
-        enqueue(width - 1, y)
-      }
-
-      for (let cursor = 0; cursor < queue.length; cursor += 1) {
-        const index = queue[cursor]
-        const x = index % width
-        const y = Math.floor(index / width)
-        data[index * 4 + 3] = 0
-        if (x > 0) enqueue(x - 1, y)
-        if (x < width - 1) enqueue(x + 1, y)
-        if (y > 0) enqueue(x, y - 1)
-        if (y < height - 1) enqueue(x, y + 1)
-      }
-
-      context.putImageData(pixels, 0, 0)
-      resolve(canvas.toDataURL('image/png'))
-    }
-    image.onerror = () => resolve(src)
-    image.src = src
-  })
-
 const Hero = () => {
-  const [processedImages, setProcessedImages] = useState([])
-  const [imagesReady, setImagesReady] = useState(false)
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches,
   )
@@ -87,33 +25,13 @@ const Hero = () => {
     return () => mediaQuery.removeEventListener?.('change', handleViewportChange)
   }, [])
 
-  useEffect(() => {
-    let cancelled = false
-    Promise.all(
-      IPHONE_IMAGES.map(async (image) => ({
-        ...image,
-        src: await removeLightBackground(image.src),
-      })),
-    ).then((images) => {
-      if (!cancelled) {
-        setProcessedImages(images)
-        setImagesReady(true)
-      }
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
   return (
     <section id="home" className="relative min-h-[820px] overflow-hidden bg-black pt-20 sm:min-h-[760px] lg:min-h-screen">
-      {imagesReady && (
-        <TiltedGridHero
-          images={processedImages}
+      <TiltedGridHero
+        images={IPHONE_IMAGES}
         speed={5}
         tileHeight={28}
-        aspectRatio={9 / 16}
+        aspectRatio={736 / 1104}
         gap={8}
         curve={75}
         fade={15}
@@ -202,8 +120,7 @@ const Hero = () => {
             </div>
           </motion.div>
         </div>
-        </TiltedGridHero>
-      )}
+      </TiltedGridHero>
 
       <motion.div
         initial={{ opacity: 0 }}
