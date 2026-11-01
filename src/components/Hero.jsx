@@ -73,7 +73,8 @@ const removeLightBackground = (src) =>
   })
 
 const Hero = () => {
-  const [processedImages, setProcessedImages] = useState(IPHONE_IMAGES)
+  const [processedImages, setProcessedImages] = useState([])
+  const [imagesReady, setImagesReady] = useState(false)
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches,
   )
@@ -94,7 +95,10 @@ const Hero = () => {
         src: await removeLightBackground(image.src),
       })),
     ).then((images) => {
-      if (!cancelled) setProcessedImages(images)
+      if (!cancelled) {
+        setProcessedImages(images)
+        setImagesReady(true)
+      }
     })
 
     return () => {
@@ -104,8 +108,9 @@ const Hero = () => {
 
   return (
     <section id="home" className="relative min-h-[820px] overflow-hidden bg-black pt-20 sm:min-h-[760px] lg:min-h-screen">
-      <TiltedGridHero
-        images={processedImages}
+      {imagesReady && (
+        <TiltedGridHero
+          images={processedImages}
         speed={5}
         tileHeight={28}
         aspectRatio={9 / 16}
@@ -197,7 +202,8 @@ const Hero = () => {
             </div>
           </motion.div>
         </div>
-      </TiltedGridHero>
+        </TiltedGridHero>
+      )}
 
       <motion.div
         initial={{ opacity: 0 }}
