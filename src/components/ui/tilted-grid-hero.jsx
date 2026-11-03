@@ -51,7 +51,9 @@ export function TiltedGridHero({
   const tile = `tgh-t-${id}`;
   const bend = (Math.min(85, Math.max(5, curve)) * Math.PI) / 180;
 
-  const [layout, setLayout] = React.useState(null);
+  const [layout, setLayout] = React.useState(() =>
+    measure(1200, 560, tileHeight, aspectRatio, gap, bend)
+  );
 
   React.useEffect(() => {
     const el = ref.current;
@@ -90,12 +92,10 @@ export function TiltedGridHero({
   const turn = (deg) =>
     `translateZ(${radius}) rotateY(${+deg.toFixed(4)}deg) translateZ(-${radius})`;
 
-  const hide = +(((sweep - limit) / (2 * sweep || 1)) * 100).toFixed(4);
   const css =
     `@keyframes ${orbit}{` +
-    `from{transform:${turn(-sweep)}}to{transform:${turn(sweep)}}` +
-    `0%,${hide}%,${100 - hide}%,100%{visibility:hidden}` +
-    `${hide + 0.001}%,${100 - hide - 0.001}%{visibility:visible}}` +
+    `from{transform:${turn(-sweep)}}` +
+    `to{transform:${turn(sweep)}}}` +
     `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused}}`;
 
   const share = aspectRatio / SLICES;
@@ -115,13 +115,12 @@ export function TiltedGridHero({
 
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 transition-opacity duration-500"
+        className="pointer-events-none absolute inset-0"
         style={{
-          opacity: layout ? 1 : 0,
           perspective: `${+(r * CAMERA).toFixed(3)}cqw`,
           perspectiveOrigin: `50% ${axis}%`,
-          maskImage: mask,
           WebkitMaskImage: mask,
+          maskImage: mask,
         }}
       >
         {Array.from({ length: columns }, (_, t) => {
@@ -137,24 +136,26 @@ export function TiltedGridHero({
                 height: u(1),
                 transformStyle: "preserve-3d",
                 animation: `${orbit} ${duration}s linear ${-t * speed}s infinite`,
+                willChange: 'transform',
               }}
             >
               {Array.from({ length: SLICES }, (_, k) => (
                 <div
                   key={k}
                   className={cn(
-                    "absolute top-0 overflow-hidden bg-transparent",
+                    "absolute top-0 overflow-hidden",
                     k === 0 && "rounded-l-lg",
                     k === SLICES - 1 && "rounded-r-lg",
                   )}
                   style={{
                     left: u((aspectRatio - share) / 2),
-                    width:
-                      k === SLICES - 1 ? u(share) : `calc(${u(share)} + 1px)`,
+                    width: `calc(${u(share)} + 1px)`,
                     height: u(1),
                     transform: turn(
                       (aspectRatio / 2 - (k + 0.5) * share) * unit,
                     ),
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
                   }}
                 >
                   {img ? (
