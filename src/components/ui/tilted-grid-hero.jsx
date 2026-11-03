@@ -100,16 +100,13 @@ export function TiltedGridHero({
 
   const share = aspectRatio / SLICES;
   const duration = columns * speed;
-  const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${
-    100 - fade
-  }%,transparent)`;
 
   return (
     <div
       ref={ref}
       className={cn("relative overflow-hidden", className)}
       {...props}
-      style={{ containerType: "size", ...props.style }}
+      style={{ containerType: "size", backgroundColor: '#000', ...props.style }}
     >
       <style>{css}</style>
 
@@ -119,8 +116,6 @@ export function TiltedGridHero({
         style={{
           perspective: `${+(r * CAMERA).toFixed(3)}cqw`,
           perspectiveOrigin: `50% ${axis}%`,
-          WebkitMaskImage: mask,
-          maskImage: mask,
         }}
       >
         {Array.from({ length: columns }, (_, t) => {
@@ -177,6 +172,15 @@ export function TiltedGridHero({
           );
         })}
       </div>
+
+      {/* Fade overlay para esconder as bordas */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[5]"
+        style={{
+          background: `linear-gradient(90deg, #000 0%, transparent ${fade}%, transparent ${100 - fade}%, #000 100%)`,
+        }}
+      />
 
       {children}
     </div>
