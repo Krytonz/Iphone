@@ -30,7 +30,7 @@ npm run build
 
 O workflow em `.github/workflows/deploy.yml` publica automaticamente o site no GitHub Pages a cada push na branch `main`. Em **Settings > Pages**, selecione **GitHub Actions** como fonte de publicação.
 
-O projeto usa `/Iphone/` como base apenas durante o build do GitHub Actions, pois esse é o nome atual do repositório.
+O projeto usa `/Iphone/` como base apenas durante o build do GitHub Actions, pois esse é o nome atual do repositório. Na Vercel, o build usa `/` para servir os assets na raiz do domínio.
 
 ## Deploy na Vercel
 
