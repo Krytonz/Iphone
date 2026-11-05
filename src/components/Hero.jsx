@@ -36,6 +36,8 @@ const Hero = () => {
 
   const isMobile = viewport.width < 640
   const isCompact = isMobile || viewport.width < 900 || viewport.height < 760
+  const carouselMaxWidth = Math.min(42, Math.max(28, viewport.width / 34))
+  const carouselTileHeight = Math.min(23, Math.max(15, viewport.height / 35))
 
   return (
     <section
@@ -45,11 +47,12 @@ const Hero = () => {
       <TiltedGridHero
         images={IPHONE_IMAGES}
         speed={isCompact ? 5.5 : 5}
-        tileHeight={isMobile ? 22 : isCompact ? 24 : 28}
+        tileHeight={carouselTileHeight}
         aspectRatio={736 / 1104}
-        gap={4}
+        gap={3}
         axis={isMobile ? 50 : 52}
         curve={58}
+        maxWidth={carouselMaxWidth}
         fade={18}
         className="absolute inset-0 h-full w-full"
         visualClassName={isMobile ? 'top-[clamp(9rem,25%,12rem)] bottom-[clamp(11rem,28%,14rem)]' : isCompact ? 'top-[clamp(9rem,23%,11.5rem)] bottom-[clamp(10rem,25%,13rem)]' : 'top-[clamp(10rem,24%,14rem)] bottom-[clamp(11rem,25%,15rem)]'}

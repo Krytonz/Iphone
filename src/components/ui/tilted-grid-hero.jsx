@@ -3,16 +3,16 @@ import { cn } from "../../lib/utils";
 
 const SLICES = 16;
 const CAMERA = 1.6;
-const MAX_WIDTH = 46;
+const DEFAULT_MAX_WIDTH = 38;
 
 function arc(bend) {
   return (CAMERA - 1 + Math.cos(bend)) / (2 * CAMERA * Math.sin(bend));
 }
 
-function measure(width, height, tile, aspect, gap, bend) {
+function measure(width, height, tile, aspect, gap, bend, maxWidth) {
   const h = Math.min(
     (tile / 100) * height,
-    ((MAX_WIDTH / 100) * width) / aspect,
+    ((maxWidth / 100) * width) / aspect,
   );
   const radius = width * arc(bend);
   if (!(h > 0) || !(radius > 0))
@@ -41,6 +41,7 @@ export function TiltedGridHero({
   axis = 56,
   curve = 80,
   fade = 12,
+  maxWidth = DEFAULT_MAX_WIDTH,
   children,
   className,
   visualClassName,
@@ -51,9 +52,10 @@ export function TiltedGridHero({
   const orbit = `tgh-o-${id}`;
   const tile = `tgh-t-${id}`;
   const bend = (Math.min(85, Math.max(5, curve)) * Math.PI) / 180;
+  const boundedMaxWidth = Math.min(60, Math.max(20, maxWidth));
 
   const [layout, setLayout] = React.useState(() =>
-    measure(1200, 560, tileHeight, aspectRatio, gap, bend)
+    measure(1200, 560, tileHeight, aspectRatio, gap, bend, boundedMaxWidth)
   );
 
   React.useEffect(() => {
@@ -61,7 +63,7 @@ export function TiltedGridHero({
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
-      const next = measure(width, height, tileHeight, aspectRatio, gap, bend);
+      const next = measure(width, height, tileHeight, aspectRatio, gap, bend, boundedMaxWidth);
       setLayout((prev) =>
         prev?.columns === next.columns &&
         prev.sweep === next.sweep &&
@@ -72,7 +74,7 @@ export function TiltedGridHero({
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [tileHeight, aspectRatio, gap, bend]);
+  }, [tileHeight, aspectRatio, gap, bend, boundedMaxWidth]);
 
   React.useEffect(() => {
     for (const { src } of images) new Image().src = src;
@@ -81,12 +83,10 @@ export function TiltedGridHero({
   const stableImages = images.length > 0 ? images : [{ src: '', alt: '' }];
 
   const { columns, sweep, unit } =
-    layout ?? measure(1200, 560, tileHeight, aspectRatio, gap, bend);
+    layout ?? measure(1200, 560, tileHeight, aspectRatio, gap, bend, boundedMaxWidth);
 
   const u = (n) =>
-    `calc(${+n.toFixed(4)} * min(${tileHeight}cqh, ${+(
-      MAX_WIDTH / aspectRatio
-    ).toFixed(4)}cqw))`;
+    `calc(${+n.toFixed(4)} * min(${tileHeight}cqh, ${+(boundedMaxWidth / aspectRatio).toFixed(4)}cqw))`;
 
   const r = 100 * arc(bend);
   const radius = `${+r.toFixed(3)}cqw`;
