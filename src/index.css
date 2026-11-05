@@ -47,6 +47,26 @@ section {
 }
 
 @media (max-width: 639px) {
+  .mobile-snap-row {
+    display: flex !important;
+    flex-wrap: nowrap;
+    gap: 0.875rem;
+    margin-inline: -0.25rem;
+    padding-inline: 0.25rem 1.5rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-snap-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-snap-row > * {
+    flex: 0 0 min(82vw, 20rem);
+    scroll-snap-align: start;
+  }
+
   :root {
     --spacing-section: 72px;
   }
@@ -82,6 +102,10 @@ section {
 
   section:not(#home)[id] .p-12 {
     padding: 1.5rem;
+  }
+
+  section:not(#home)[id] .mobile-snap-row {
+    margin-bottom: 1.5rem;
   }
 }
 

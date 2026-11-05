@@ -57,7 +57,7 @@ const Contato = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="mobile-snap-row grid grid-cols-1 gap-6 overflow-x-auto pb-4 md:grid-cols-3 md:overflow-visible">
           {contatoInfo.map((item, index) => {
             const Icon = item.icon
             return (

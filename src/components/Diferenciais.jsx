@@ -90,7 +90,7 @@ const Diferenciais = () => {
         </motion.div>
 
         {/* Diferenciais Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="mobile-snap-row grid grid-cols-1 gap-6 overflow-x-auto pb-4 md:grid-cols-2 md:overflow-visible lg:grid-cols-4">
           {diferenciais.map((diferencial, index) => (
             <DiferencialCard key={diferencial.id} diferencial={diferencial} index={index} />
           ))}
