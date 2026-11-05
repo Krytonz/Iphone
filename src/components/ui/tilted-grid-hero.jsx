@@ -43,6 +43,7 @@ export function TiltedGridHero({
   fade = 12,
   children,
   className,
+  visualClassName,
   ...props
 }) {
   const ref = React.useRef(null);
@@ -79,7 +80,7 @@ export function TiltedGridHero({
 
   const stableImages = images.length > 0 ? images : [{ src: '', alt: '' }];
 
-  const { columns, sweep, unit, limit } =
+  const { columns, sweep, unit } =
     layout ?? measure(1200, 560, tileHeight, aspectRatio, gap, bend);
 
   const u = (n) =>
@@ -103,22 +104,26 @@ export function TiltedGridHero({
 
   return (
     <div
-      ref={ref}
       className={cn("relative overflow-hidden", className)}
       {...props}
-      style={{ containerType: "size", backgroundColor: '#000', ...props.style }}
+      style={{ backgroundColor: '#000', ...props.style }}
     >
-      <style>{css}</style>
-
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          perspective: `${+(r * CAMERA).toFixed(3)}cqw`,
-          perspectiveOrigin: `50% ${axis}%`,
-        }}
+        ref={ref}
+        className={cn("absolute inset-x-0 overflow-hidden", visualClassName ?? "inset-y-0")}
+        style={{ containerType: 'size' }}
       >
-        {Array.from({ length: columns }, (_, t) => {
+        <style>{css}</style>
+
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            perspective: `${+(r * CAMERA).toFixed(3)}cqw`,
+            perspectiveOrigin: `50% ${axis}%`,
+          }}
+        >
+          {Array.from({ length: columns }, (_, t) => {
           const img = stableImages[t % stableImages.length];
           return (
             <div
@@ -170,17 +175,18 @@ export function TiltedGridHero({
               ))}
             </div>
           );
-        })}
-      </div>
+          })}
+        </div>
 
-      {/* Fade overlay para esconder as bordas */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-[5]"
-        style={{
-          background: `linear-gradient(90deg, #000 0%, transparent ${fade}%, transparent ${100 - fade}%, #000 100%)`,
-        }}
-      />
+        {/* Fade overlay para esconder as bordas */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-[5]"
+          style={{
+            background: `linear-gradient(90deg, #000 0%, transparent ${fade}%, transparent ${100 - fade}%, #000 100%)`,
+          }}
+        />
+      </div>
 
       {children}
     </div>
