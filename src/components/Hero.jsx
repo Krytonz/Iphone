@@ -47,9 +47,9 @@ const Hero = () => {
         speed={isCompact ? 5.5 : 5}
         tileHeight={isMobile ? 22 : isCompact ? 24 : 28}
         aspectRatio={736 / 1104}
-        gap={8}
+        gap={4}
         axis={isMobile ? 50 : 52}
-        curve={75}
+        curve={58}
         fade={18}
         className="absolute inset-0 h-full w-full"
         visualClassName={isMobile ? 'top-[clamp(9rem,25%,12rem)] bottom-[clamp(11rem,28%,14rem)]' : isCompact ? 'top-[clamp(9rem,23%,11.5rem)] bottom-[clamp(10rem,25%,13rem)]' : 'top-[clamp(10rem,24%,14rem)] bottom-[clamp(11rem,25%,15rem)]'}

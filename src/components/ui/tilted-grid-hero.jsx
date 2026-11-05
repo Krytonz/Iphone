@@ -3,7 +3,7 @@ import { cn } from "../../lib/utils";
 
 const SLICES = 16;
 const CAMERA = 1.6;
-const MAX_WIDTH = 55;
+const MAX_WIDTH = 46;
 
 function arc(bend) {
   return (CAMERA - 1 + Math.cos(bend)) / (2 * CAMERA * Math.sin(bend));
