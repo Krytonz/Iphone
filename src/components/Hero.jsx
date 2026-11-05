@@ -1,15 +1,15 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { FaWhatsapp, FaApple } from 'react-icons/fa'
-import { TiltedGridHero } from './ui/tilted-grid-hero'
+import CardFanCarousel from './ui/card-fan-carousel'
 
 // Referências fornecidas pelo cliente: iPhone 18 Pro Max em três acabamentos.
 const assetUrl = (fileName) => `${import.meta.env.BASE_URL}${fileName}`
 
 const IPHONE_IMAGES = [
-  { src: assetUrl('iphone-white.jpg'), alt: 'iPhone 18 Pro Max branco, frente e traseira' },
-  { src: assetUrl('iphone-blue.jpg'), alt: 'iPhone 18 Pro Max azul, frente e traseira' },
-  { src: assetUrl('iphone-black.jpg'), alt: 'iPhone 18 Pro Max preto, frente e traseira' },
+  { src: assetUrl('iphone-natural.png'), alt: 'iPhone conceitual em titânio natural com três câmeras' },
+  { src: assetUrl('iphone-blue-concept.png'), alt: 'iPhone conceitual azul metálico com câmera horizontal' },
+  { src: assetUrl('iphone-black.png'), alt: 'iPhone preto fosco com três câmeras' },
 ]
 
 const Hero = () => {
@@ -36,29 +36,18 @@ const Hero = () => {
 
   const isMobile = viewport.width < 640
   const isCompact = isMobile || viewport.width < 900 || viewport.height < 760
-  const carouselMaxWidth = Math.min(32, Math.max(20, viewport.width / 42))
-  const carouselTileHeight = Math.min(20, Math.max(13, viewport.height / 42))
-
   return (
     <section
       id="home"
       className="relative min-h-[clamp(650px,100svh,760px)] overflow-hidden bg-black pt-16 sm:min-h-[clamp(680px,100svh,860px)] sm:pt-20 lg:min-h-[min(900px,100svh)]"
     >
-      <TiltedGridHero
-        images={IPHONE_IMAGES}
-        speed={isCompact ? 5.5 : 5}
-        tileHeight={carouselTileHeight}
-        aspectRatio={736 / 1104}
-        gap={3}
-        axis={isMobile ? 50 : 52}
-        curve={58}
-        maxWidth={carouselMaxWidth}
-        fade={22}
+      <CardFanCarousel
+        cards={IPHONE_IMAGES.map((image) => ({ imgUrl: image.src, alt: image.alt }))}
         className="absolute inset-0 h-full w-full"
-        visualClassName={isMobile ? 'top-[clamp(9rem,25%,12rem)] bottom-[clamp(11rem,28%,14rem)]' : isCompact ? 'top-[clamp(9rem,23%,11.5rem)] bottom-[clamp(10rem,25%,13rem)]' : 'top-[clamp(10rem,24%,14rem)] bottom-[clamp(11rem,25%,15rem)]'}
+        visualClassName={isMobile ? 'top-[clamp(10rem,29%,13rem)] bottom-[clamp(10rem,29%,13rem)]' : isCompact ? 'top-[clamp(11rem,29%,15rem)] bottom-[clamp(11rem,29%,15rem)]' : 'top-[clamp(12rem,30%,17rem)] bottom-[clamp(12rem,30%,17rem)]'}
       >
 
-        <div className="absolute inset-0 z-10 flex flex-col items-center px-4 text-center sm:px-6">
+        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center px-4 text-center sm:px-6">
           {/* O título ocupa seu próprio espaço e nunca é posicionado sobre o conteúdo inferior. */}
           <motion.div
             initial={{ opacity: 0, y: -24 }}
@@ -104,7 +93,7 @@ const Hero = () => {
                 href="https://wa.me/seu-numero-aqui"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-11 items-center justify-center space-x-2 rounded-full bg-gradient-to-r from-apple-blue to-electric-blue px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-apple-blue/50 sm:px-8 sm:py-3.5 sm:text-lg"
+                className="pointer-events-auto flex min-h-11 items-center justify-center space-x-2 rounded-full bg-gradient-to-r from-apple-blue to-electric-blue px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-apple-blue/50 sm:px-8 sm:py-3.5 sm:text-lg"
               >
                 <FaWhatsapp size={22} />
                 <span>Consultar no WhatsApp</span>
@@ -112,7 +101,7 @@ const Hero = () => {
               <button
                 type="button"
                 onClick={() => document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex min-h-11 items-center justify-center space-x-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20 sm:px-8 sm:py-3.5 sm:text-lg"
+                className="pointer-events-auto flex min-h-11 items-center justify-center space-x-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20 sm:px-8 sm:py-3.5 sm:text-lg"
               >
                 <FaApple size={22} />
                 <span>Ver Produtos</span>
@@ -141,7 +130,7 @@ const Hero = () => {
             </div>
           </motion.div>
         </div>
-      </TiltedGridHero>
+      </CardFanCarousel>
 
       <motion.div
         initial={{ opacity: 0 }}
